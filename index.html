@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>Gold Radar ایران | رصد هوشمند طلا</title>
+<style>
+:root{
+ --bg:#080d18;--panel:#101827;--panel2:#141f32;--line:#24344f;--text:#edf4ff;--muted:#8fa3c2;
+ --green:#19d39a;--red:#ff5e73;--yellow:#f5c451;--blue:#62a9ff;--purple:#9b7bff;--shadow:0 18px 55px #0005;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:
+ radial-gradient(900px 500px at 85% -10%,#20345d66,transparent 60%),
+ radial-gradient(700px 450px at 0% 20%,#173b3966,transparent 55%),var(--bg);
+ color:var(--text);font-family:Tahoma,Arial,sans-serif;line-height:1.7}
+.wrap{max-width:1250px;margin:auto;padding:22px}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.brand h1{font-size:28px;margin:0}.brand p{margin:2px 0;color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:10px 14px;cursor:pointer}
+button:hover{border-color:#3b5378}.live{color:#06140f;background:var(--green);border:0;font-weight:800}
+.notice{margin-top:15px;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:#0e1727;color:var(--muted);font-size:12px}
+.notice.ok{border-color:#1c5c4a;background:#0b211b;color:#a6f2d7}.notice.bad{border-color:#66303a;background:#241116;color:#ffb6c0}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:15px}.card{background:#101827eF;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:var(--shadow)}
+.kicker{font-size:11px;color:var(--muted)}.value{font-size:27px;font-weight:900;letter-spacing:-.5px;margin:4px 0}.unit{font-size:11px;color:var(--muted)}
+.change{font-size:12px;font-weight:800}.up{color:var(--green)}.down{color:var(--red)}.flat{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.title{font-weight:900;font-size:16px;margin-bottom:11px}.sub{font-size:11px;color:var(--muted)}
+.hero{min-height:270px;display:flex;flex-direction:column;justify-content:center;background:
+ linear-gradient(135deg,#142238,#0f1726 65%,#0d251f)}
+.status{font-size:27px;font-weight:950;margin:2px 0 3px}.scoreline{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px}
+.score{font-size:25px;font-weight:900}.bar{height:12px;background:#26344c;border-radius:99px;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;width:50%;background:var(--yellow);border-radius:99px;transition:.4s}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #26344f;font-size:12px}.row:last-child{border-bottom:0}
+.signal{padding:11px 12px;border-radius:11px;background:#0b1422;border-right:4px solid var(--blue);margin-top:9px;font-size:12px}
+.good{border-right-color:var(--green)}.bad{border-right-color:var(--red)}.warn{border-right-color:var(--yellow)}
+.metric{font-size:22px;font-weight:900}.positive{color:var(--green)}.negative{color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:right}th{color:var(--muted);font-weight:500}
+.pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#1b2940;color:#b9cdf0;font-size:10px}
+.sourcebox{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.sourcebox:last-child{border-bottom:0}.sourcebox a{color:#86bcff;text-decoration:none}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:12px}.calcbox{background:#0b1422;border:1px solid var(--line);border-radius:14px;padding:14px}.calcnum{font-size:22px;font-weight:900}
+.foot{margin:25px 0 5px;color:#7185a5;font-size:10px;text-align:center}
+#tgju-live{position:absolute;left:-99999px;top:-99999px;width:1px;height:1px;overflow:hidden}
+@media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.grid2,.grid3{grid-template-columns:1fr}}
+@media(max-width:540px){.wrap{padding:12px}.cards{grid-template-columns:1fr}.value{font-size:24px}.status{font-size:22px}.calc{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <h1>🪙 Gold Radar ایران</h1>
+    <p>رصد خودکار طلا، دلار و انس جهانی + ارزش ذاتی + تحلیل شرایط خرید</p>
+  </div>
+  <div class="actions">
+    <button class="live" onclick="refresh(true)">↻ بروزرسانی الان</button>
+    <button onclick="document.getElementById('sources').scrollIntoView()">منابع داده</button>
+  </div>
+</header>
+
+<div id="notice" class="notice">در حال اتصال به منابع قیمت…</div>
+
+<div class="cards">
+  <div class="card"><div class="kicker">طلای ۱۸ عیار / گرم</div><div id="g18" class="value">—</div><div id="g18chg" class="change flat">—</div><div id="g18src" class="unit">در انتظار منبع</div></div>
+  <div class="card"><div class="kicker">طلای ۲۴ عیار / گرم</div><div id="g24" class="value">—</div><div id="g24chg" class="change flat">محاسبه‌شده از ۱۸K</div><div class="unit">ریال</div></div>
+  <div class="card"><div class="kicker">انس جهانی XAU/USD</div><div id="xau" class="value">—</div><div id="xauchg" class="change flat">—</div><div class="unit">دلار / اونس تروا</div></div>
+  <div class="card"><div class="kicker">دلار آزاد ایران</div><div id="usd" class="value">—</div><div id="usdchg" class="change flat">—</div><div class="unit">ریال</div></div>
+</div>
+
+<div class="grid2">
+  <section class="card hero">
+    <div class="title">🤖 نتیجه تحلیل هوشمند</div>
+    <div id="status" class="status">در حال تحلیل…</div>
+    <div id="statusText" class="sub">با رسیدن داده‌های معتبر، امتیاز محاسبه می‌شود.</div>
+    <div class="scoreline"><span>امتیاز شرایط خرید</span><b id="score" class="score">—</b></div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="row"><span>فاصله قیمت بازار از ارزش نظری</span><b id="premium">—</b></div>
+    <div class="row"><span>روند ۱۸K</span><b id="trend">—</b></div>
+  </section>
+
+  <section class="card">
+    <div class="title">🎯 جمع‌بندی تصمیم</div>
+    <div id="signals"><div class="signal">هنوز داده کافی برای تصمیم‌گیری نیست.</div></div>
+    <div class="sub" style="margin-top:12px">این بخش «سیگنال» است، نه پیش‌بینی قطعی قیمت آینده.</div>
+  </section>
+</div>
+
+<div class="grid3">
+  <section class="card"><div class="title">💰 ارزش نظری ۱۸K</div><div id="fair18" class="metric">—</div><div class="sub">انس × دلار ÷ 31.1034768 × خلوص ۱۸K. اجرت، مالیات، سود و حباب در این عدد نیست.</div></section>
+  <section class="card"><div class="title">📐 ارزش نظری ۲۴K</div><div id="fair24" class="metric">—</div><div class="sub">ارزش خام هر گرم طلای خالص بر اساس XAU/USD و دلار ایران.</div></section>
+  <section class="card"><div class="title">⚖️ فاصله بازار</div><div id="premium2" class="metric">—</div><div class="sub">مثبت = بازار بالاتر از ارزش نظری؛ منفی = پایین‌تر.</div></section>
+</div>
+
+<section class="card" style="margin-top:14px">
+  <div class="title">🧠 چرا این سیگنال صادر شده؟</div>
+  <div id="reasonTable" class="sub">—</div>
+</section>
+
+<section class="card" style="margin-top:14px">
+  <div class="title">🧮 مبدل داخلی عیار — بدون ورود اطلاعات</div>
+  <div class="calc">
+    <div class="calcbox"><div class="kicker">قیمت فعلی ۱۸K → ۲۴K</div><div id="conv24" class="calcnum">—</div><div class="sub">هر گرم</div></div>
+    <div class="calcbox"><div class="kicker">قیمت فعلی ۲۴K → ۱۸K</div><div id="conv18" class="calcnum">—</div><div class="sub">هر گرم</div></div>
+  </div>
+</section>
+
+<section class="card" style="margin-top:14px">
+  <div class="title">📈 snapshot بازار</div>
+  <table>
+    <thead><tr><th>شاخص</th><th>قیمت</th><th>تغییر</th><th>وضعیت</th></tr></thead>
+    <tbody id="snapshot"></tbody>
+  </table>
+</section>
+
+<section id="sources" class="card" style="margin-top:14px">
+  <div class="title">🔎 منابع و اعتبار داده</div>
+  <div class="sourcebox"><span>شبکه اطلاع‌رسانی طلا و ارز (TGJU) — طلای ۱۸، ۲۴، دلار و انس</span><span id="tgjust">در انتظار</span></div>
+  <div class="sourcebox"><span>XAUS — XAU/USD جهانی، API بدون کلید و CORS باز</span><span id="xausst">در انتظار</span></div>
+  <div class="sourcebox"><span>PersianToolbox — منبع پشتیبان طلا</span><span id="ptst">در انتظار</span></div>
+  <div class="sourcebox"><span>مرجع رسمی/صنفی اتحادیه طلا و جواهر تهران</span><a href="https://www.estjt.ir/" target="_blank" rel="noopener">باز کردن سایت</a></div>
+</section>
+
+<div id="tgju-live">
+  <tgju type="ticker" items="دلار,انس طلا,طلای 18,طلای 24" columns="dot,diff" token="webservice"></tgju>
+</div>
+<div class="foot">
+  آخرین بروزرسانی: <span id="updated">—</span> · واحد اصلی: ریال · داده جهانی: XAU/USD · مناسب برای پایش شخصی بازار ایران
+</div>
+</div>
+
+<script src="https://api.tgju.org/v1/widget/v2" defer></script>
+<script>
+'use strict';
+
+const state={g18:null,g18chg:null,g24:null,g24chg:null,xau:null,xauchg:null,usd:null,usdchg:null,fair18:null,fair24:null,updated:null,sources:[]};
+const $=id=>document.getElementById(id);
+const fa=n=>Number.isFinite(+n)?new Intl.NumberFormat('fa-IR',{maximumFractionDigits:0}).format(+n):'—';
+const en=n=>Number.isFinite(+n)?new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(+n):'—';
+const pct=n=>Number.isFinite(+n)?((+n>=0?'+':'')+Number(n).toFixed(2)+'٪'):'—';
+
+function norm(s){
+ return String(s??'').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+ .replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٬,]/g,'').replace(/٫/g,'.');
+}
+function numberFrom(s){
+ const m=norm(s).match(/-?\d+(?:\.\d+)?/g); if(!m)return null;
+ return parseFloat(m.join(''));
+}
+function setChange(id,v){
+ const el=$(id); el.textContent=pct(v); el.className='change '+(v>0?'up':v<0?'down':'flat');
+}
+
+/* TGJU's official widget loads its own live feed. We inspect its rendered text so the
+   page can remain a single static HTML file without an API key. */
+function collectTGJUText(){
+ const root=$('tgju-live');
+ let out='';
+ function walk(n){
+   if(!n)return;
+   if(n.nodeType===3) out+=' '+n.textContent;
+   if(n.shadowRoot) walk(n.shadowRoot);
+   if(n.childNodes) n.childNodes.forEach(walk);
+ }
+ walk(root);
+ return out.replace(/\s+/g,' ');
+}
+function parseTGJU(){
+ const t=collectTGJUText();
+ if(!t || t.length<20)return false;
+ const patterns=[
+   {key:'g18',names:['طلای 18','طلا ۱۸','طلای ۱۸'],min:10000000,max:2000000000},
+   {key:'g24',names:['طلای 24','طلا ۲۴','طلای ۲۴'],min:15000000,max:3000000000},
+   {key:'xau',names:['انس طلا','انس'],min:500,max:10000},
+   {key:'usd',names:['دلار'],min:100000,max:10000000}
+ ];
+ let found=0;
+ for(const p of patterns){
+   for(const name of p.names){
+     const i=t.indexOf(name);
+     if(i<0)continue;
+     const tail=t.slice(i,i+180);
+     const nums=(norm(tail).match(/\d[\d. ]*/g)||[]).map(numberFrom).filter(Number.isFinite);
+     const candidate=nums.find(x=>x>=p.min&&x<=p.max);
+     if(candidate!=null){state[p.key]=candidate;found++;break}
+   }
+ }
+ /* The widget normally emits percentage immediately after the quote. */
+ if(state.g18!=null)state.g18chg=parsePercentNear(t,['طلای 18','طلا ۱۸','طلای ۱۸']);
+ if(state.g24!=null)state.g24chg=parsePercentNear(t,['طلای 24','طلا ۲۴','طلای ۲۴']);
+ if(state.xau!=null)state.xauchg=parsePercentNear(t,['انس طلا','انس']);
+ if(state.usd!=null)state.usdchg=parsePercentNear(t,['دلار']);
+ return found>=2;
+}
+function parsePercentNear(t,names){
+ for(const n of names){
+   const i=t.indexOf(n);if(i<0)continue;
+   const tail=t.slice(i,i+160);
+   const m=norm(tail).match(/([+-]?\d+(?:\.\d+)?)\s*%/); if(m)return +m[1];
+   const pm=tail.match(/([+-]?\d+(?:[٫.]\d+)?)\s*٪/); if(pm)return +norm(pm[1]);
+ }
+ return null;
+}
+
+async function getJson(url){
+ const r=await fetch(url,{cache:'no-store'}); if(!r.ok)throw new Error(r.status);
+ return r.json();
+}
+async function loadXAUS(){
+ const j=await getJson('https://xaus.com/api/v1/spot?currency=USD&unit=troy_oz');
+ const x=j?.spot_usd_oz ?? j?.xau?.price;
+ if(Number.isFinite(+x)){state.xau=+x;state.sources.push('XAUS');$('xausst').textContent='✓ فعال';return true}
+ return false;
+}
+async function loadPT(){
+ const j=await getJson('https://persiantoolbox.ir/api/market');
+ const g=j?.data?.gold?.pricePerGram;
+ if(Number.isFinite(+g)){
+   if(state.g18==null)state.g18=+g;
+   state.sources.push('PersianToolbox');$('ptst').textContent='✓ پشتیبان فعال';
+   return true
+ }
+ return false;
+}
+function fair(){
+ if(state.xau==null||state.usd==null)return;
+ state.fair24=state.xau*state.usd/31.1034768;
+ state.fair18=state.fair24*.75;
+ $('fair24').textContent=fa(state.fair24)+' ریال';
+ $('fair18').textContent=fa(state.fair18)+' ریال';
+ if(state.g18!=null){
+   const p=(state.g18/state.fair18-1)*100;
+   $('premium').textContent=pct(p);$('premium2').textContent=pct(p);
+ }
+}
+function analyze(){
+ if(state.g18==null){$('status').textContent='داده کافی نیست';return}
+ let score=50,rs=[];
+ let premium=null;
+ if(state.fair18!=null){
+   premium=(state.g18/state.fair18-1)*100;
+   if(premium<=-5){score+=28;rs.push(['قیمت بازار زیر ارزش نظری','سیگنال مثبت برای بررسی خرید پله‌ای','good'])}
+   else if(premium<=0){score+=18;rs.push(['قیمت نزدیک یا کمی زیر ارزش نظری','شرایط نسبتاً مناسب','good'])}
+   else if(premium<=3){score+=5;rs.push(['قیمت کمی بالاتر از ارزش نظری','شرایط خنثی','warn'])}
+   else if(premium<=7){score-=12;rs.push(['قیمت بالاتر از ارزش نظری','برای خرید عجله نکن','warn'])}
+   else{score-=28;rs.push(['فاصله قیمت از ارزش نظری زیاد است','ریسک ورود بالاتر','bad'])}
+ }
+ if(state.g18chg!=null){
+   if(state.g18chg<-1){score+=12;rs.push(['روند روزانه ۱۸K منفی است','فشار کوتاه‌مدت فروش/اصلاح','good'])}
+   else if(state.g18chg>2){score-=12;rs.push(['۱۸K در روز رشد تند داشته','ورود یک‌جای سنگین پرریسک‌تر است','bad'])}
+   else rs.push(['روند روزانه ۱۸K ملایم است','سیگنال قوی جهت‌دار ندارد','warn']);
+ }
+ if(state.xauchg!=null){
+   if(state.xauchg<0)score+=3;else if(state.xauchg>1)score-=4;
+ }
+ score=Math.max(0,Math.min(100,Math.round(score)));
+ $('score').textContent=score+' / 100';$('bar').style.width=score+'%';
+ let title=score>=72?'🟢 مناسب‌تر برای بررسی خرید پله‌ای':score>=52?'🟡 محدوده خنثی؛ عجله نکن':'🔴 خرید در این محدوده پرریسک‌تر است';
+ $('status').textContent=title;
+ $('statusText').textContent=score>=72?'چند شاخص همزمان شرایط نسبتاً بهتری برای ورود پله‌ای نشان می‌دهند.':score>=52?'سیگنال‌ها ترکیبی هستند؛ برای خرید یک‌جای سنگین عجله نکن.':'قیمت/روند فعلی ریسک ورود را بالاتر نشان می‌دهد.';
+ $('trend').textContent=state.g18chg==null?'نامشخص':state.g18chg>0?'صعودی ↗':state.g18chg<0?'نزولی ↘':'خنثی →';
+ $('signals').innerHTML=rs.map(x=>`<div class="signal ${x[2]}"><b>${x[0]}</b><br>${x[1]}</div>`).join('');
+ $('reasonTable').innerHTML=rs.map(x=>`<div class="row"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')||'—';
+}
+function render(){
+ if(state.g18!=null){$('g18').textContent=fa(state.g18)+' ریال';$('g18src').textContent=state.sources.includes('TGJU')?'TGJU':'منبع پشتیبان';}
+ if(state.g24==null&&state.g18!=null)state.g24=state.g18*24/18;
+ if(state.g24!=null)$('g24').textContent=fa(state.g24)+' ریال';
+ if(state.xau!=null)$('xau').textContent=en(state.xau);
+ if(state.usd!=null)$('usd').textContent=fa(state.usd)+' ریال';
+ if(state.g18chg!=null)setChange('g18chg',state.g18chg);
+ if(state.xauchg!=null)setChange('xauchg',state.xauchg);
+ if(state.usdchg!=null)setChange('usdchg',state.usdchg);
+ $('conv24').textContent=state.g18!=null?fa(state.g18*24/18)+' ریال':'—';
+ $('conv18').textContent=state.g24!=null?fa(state.g24*18/24)+' ریال':'—';
+ fair();analyze();
+ $('snapshot').innerHTML=[
+   ['طلای ۱۸ عیار',state.g18,state.g18chg,'ریال / گرم'],
+   ['طلای ۲۴ عیار',state.g24,state.g24chg,'ریال / گرم'],
+   ['انس جهانی',state.xau,state.xauchg,'USD / oz'],
+   ['دلار',state.usd,state.usdchg,'ریال']
+ ].map(r=>`<tr><td>${r[0]}</td><td>${r[1]==null?'—':(r[0]=='انس جهانی'?en(r[1]):fa(r[1]))}</td><td>${pct(r[2])}</td><td><span class="pill">${r[3]}</span></td></tr>`).join('');
+}
+async function refresh(manual=false){
+ if(manual)$('notice').textContent='در حال بروزرسانی همه منابع…';
+ state.sources=[];
+ /* Give TGJU widget time to render, then parse it. */
+ let tg=false;
+ for(let i=0;i<12;i++){await new Promise(r=>setTimeout(r,400));tg=parseTGJU();if(tg)break}
+ if(tg){state.sources.push('TGJU');$('tgjust').textContent='✓ فعال'}
+ else $('tgjust').textContent='⚠ ویجت در دسترس نبود';
+ try{await loadXAUS()}catch(e){$('xausst').textContent='⚠ خطا'}
+ if(state.g18==null)try{await loadPT()}catch(e){}
+ if(state.usd==null){
+   /* If TGJU did not expose the dollar to JS, leave it unavailable rather than
+      inventing a free-market rate from an unrelated FX source. */
+ }
+ state.updated=new Date().toLocaleString('fa-IR');
+ render();
+ const ok=state.g18!=null&&state.xau!=null&&state.usd!=null;
+ $('notice').className='notice '+(ok?'ok':'bad');
+ $('notice').textContent=ok
+ ?`✓ داده‌ها آماده‌اند · ${state.sources.join(' + ')} · آخرین دریافت ${state.updated}`
+ :'⚠ بخشی از داده‌ها از منبع آنلاین خوانده نشد. خود ابزار بدون ورود اطلاعات دوباره تلاش می‌کند.';
+ $('updated').textContent=state.updated;
+}
+window.addEventListener('load',()=>refresh(false));
+setInterval(()=>refresh(false),60000);
+</script>
+</body>
+</html>
